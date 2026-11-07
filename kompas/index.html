@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Компас автоматизации — диагностика за 5 минут</title>
+<meta name="description" content="12 вопросов о вашей рутине и персональный список направлений, с которых стоит начать автоматизацию.">
+<style>
+:root{
+  --mint:60,209,173; --iris:196,145,224; --ink:#142a22; --ink-soft:#4f6d61;
+  --accent:#0e9d78; --accent-strong:#0a7a5c; --shadow:20,60,48;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Karla',-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--ink); background:linear-gradient(160deg,#f2fbf7 0%,#e7f5ee 100%);
+  min-height:100vh; line-height:1.55;
+}
+a{color:var(--accent-strong)}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;letter-spacing:.02em}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--ink);color:#f7fff9;display:grid;place-items:center;font-size:13px;font-weight:700}
+.back{font-size:14px;text-decoration:none;color:var(--ink-soft);border-bottom:1px solid rgba(20,42,34,.2);padding-bottom:2px}
+.card{background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);border-radius:22px;padding:32px 28px;box-shadow:0 18px 44px rgba(var(--shadow),.10)}
+h1{font-size:clamp(26px,4.4vw,38px);line-height:1.15;margin:0 0 14px}
+h2{font-size:clamp(20px,3vw,26px);line-height:1.25;margin:0 0 8px}
+.lead{font-size:17px;color:var(--ink-soft);margin:0 0 22px}
+.meta{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--ink-soft);margin:0 0 26px}
+.meta span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:14px;border:1px solid transparent;background:var(--ink);color:#f7fff9;font-size:16px;font-weight:700;text-decoration:none;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease;font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(var(--shadow),.22)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:rgba(20,42,34,.22)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.progress{height:6px;border-radius:99px;background:rgba(20,42,34,.10);overflow:hidden;margin-bottom:24px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),rgba(var(--mint),1));transition:width .3s ease}
+.block-name{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-strong);font-weight:700;margin-bottom:10px}
+.q{font-size:20px;font-weight:700;margin:0 0 6px;line-height:1.3}
+.hint{font-size:14px;color:var(--ink-soft);margin:0 0 18px}
+input[type=text],textarea,select{width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(20,42,34,.18);background:#fff;font-size:16px;font-family:inherit;color:var(--ink);outline:none;transition:border-color .15s ease,box-shadow .15s ease}
+textarea{min-height:104px;resize:vertical}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--mint),.35)}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-radius:14px;border:1px solid rgba(20,42,34,.16);background:#fff;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+.opt:hover{border-color:rgba(20,42,34,.32)}
+.opt input{margin:3px 0 0;accent-color:var(--accent);width:18px;height:18px;flex:none}
+.opt span{font-size:15.5px}
+.opt.checked{border-color:var(--accent);background:rgba(var(--mint),.10)}
+.counter{font-size:13px;color:var(--ink-soft);margin-top:14px}
+.result-hero{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin:0 0 6px}
+.big{font-size:clamp(34px,7vw,52px);font-weight:700;line-height:1;color:var(--accent-strong)}
+.recs{display:grid;gap:14px;margin:22px 0 0;padding:0;list-style:none;counter-reset:r}
+.recs li{counter-increment:r;display:grid;grid-template-columns:auto 1fr;gap:14px;padding:18px;border-radius:16px;background:#fff;border:1px solid rgba(20,42,34,.10)}
+.recs li::before{content:counter(r);width:30px;height:30px;border-radius:9px;background:var(--ink);color:#f7fff9;display:grid;place-items:center;font-size:14px;font-weight:700}
+.recs h3{margin:0 0 6px;font-size:17px}
+.recs p{margin:0;font-size:15px;color:var(--ink-soft)}
+.steps{margin:24px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.steps li{display:flex;gap:12px;font-size:15.5px}
+.steps b{flex:none;width:24px;height:24px;border-radius:50%;background:rgba(var(--mint),.55);display:grid;place-items:center;font-size:13px}
+.note{font-size:13px;color:var(--ink-soft);margin-top:22px;padding-top:18px;border-top:1px solid rgba(20,42,34,.10)}
+footer{margin-top:34px;font-size:13px;color:var(--ink-soft);text-align:center}
+@media(max-width:560px){.card{padding:24px 20px;border-radius:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="logo" href="/"><span class="logo-mark">ДП</span> Дизайн процессов</a>
+    <a class="back" href="/">← на сайт</a>
+  </div>
+
+  <div id="app" class="card"></div>
+
+  <footer>Дизайн процессов · диагностика бесплатная, без регистрации</footer>
+</div>
+
+<script>
+const BLOCKS = [
+  { title: "О тебе", questions: [
+    { key:"role", q:"Кем работаешь и чем занимаешься?", hint:"Например: дизайнер, мастер макраме, менеджер по продажам, владелец студии.", type:"text", ph:"Профессия или роль" },
+    { key:"sphere", q:"В какой сфере?", hint:"Банк, продажи, маркетинг, услуги, производство, творчество — что ближе.", type:"text", ph:"Сфера" }
+  ]},
+  { title: "Рутина", questions: [
+    { key:"routine_tasks", q:"Какие задачи повторяются каждый день или каждую неделю?", hint:"Перечисли коротко, через запятую: отвечаю на заявки, собираю отчёт, готовлю посты.", type:"textarea" },
+    { key:"routine_hours", q:"Сколько часов в неделю уходит на рутину, которая не требует творчества или решений?", hint:"Прикинь честно — это основа расчёта.", type:"radio", opts:[
+      "до 3 часов","3–7 часов","7–12 часов","12–20 часов","больше 20 часов" ] }
+  ]},
+  { title: "Инструменты", questions: [
+    { key:"tools", q:"Чем пользуешься в работе?", hint:"Можно выбрать несколько.", type:"checks", opts:[
+      "Excel / Google Таблицы","CRM","Почта","Мессенджеры","1С или другая учётная система","Бумага, блокнот, заметки","Notion / Trello / планировщики" ] },
+    { key:"manual_work", q:"Что из этого приходится делать руками?", hint:"Копировать, сверять, пересылать, заполнять, переносить из чата в таблицу.", type:"textarea" }
+  ]},
+  { title: "Боль", questions: [
+    { key:"pain", q:"Что больше всего бесит или отнимает силы в текущей работе?", hint:"Можно без фильтра — именно это чаще всего и автоматизируется.", type:"textarea" },
+    { key:"postponed", q:"Что откладываешь, потому что «руки не доходят»?", hint:"Отчёты, ответы клиентам, контент, порядок в файлах?", type:"textarea" }
+  ]},
+  { title: "Команда и масштаб", questions: [
+    { key:"team", q:"Ты делаешь эти задачи одна или в команде?", hint:"", type:"radio", opts:[
+      "Одна","Нас двое-трое","Команда больше трёх человек" ] },
+    { key:"budget", q:"Есть ли бюджет на автоматизацию?", hint:"Честный ответ поможет предложить подходящий первый шаг.", type:"radio", opts:[
+      "Есть, готов(а) вкладываться","Пока просто хочу понять направление","Не знаю" ] }
+  ]},
+  { title: "Итог", questions: [
+    { key:"freed_time", q:"Что изменится, если освободится 5–10 часов в неделю?", hint:"Это станет вашей целью в плане.", type:"textarea" },
+    { key:"contact_pref", q:"Как удобнее получить ответ после диагностики?", hint:"", type:"radio", opts:[
+      "В Telegram","Звонком","На e-mail" ] }
+  ]}
+];
+
+const ALL = BLOCKS.flatMap(b => b.questions.map(q => ({...q, block:b.title})));
+const answers = {};
+let idx = -1; // -1 = intro
+
+const app = document.getElementById('app');
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function render(){
+  if (idx < 0) return renderIntro();
+  if (idx >= ALL.length) return renderResult();
+  renderQuestion();
+}
+
+function renderIntro(){
+  app.innerHTML = `
+    <h1>Компас автоматизации</h1>
+    <p class="lead">Двенадцать вопросов о вашей работе — и понятный список того, что стоит автоматизировать первым.</p>
+    <div class="meta">
+      <span><i class="dot"></i>5 минут</span>
+      <span><i class="dot"></i>без регистрации</span>
+      <span><i class="dot"></i>результат сразу на экране</span>
+    </div>
+    <p class="hint" style="margin-bottom:0">Отвечайте как есть, без «правильных» вариантов — чем честнее, тем точнее рекомендации. Ничего не отправляется на сервер: всё считается здесь, в браузере.</p>
+    <div class="row"><button class="btn" onclick="start()">Начать диагностику →</button></div>`;
+}
+
+function start(){ idx = 0; render(); }
+
+function renderQuestion(){
+  const q = ALL[idx];
+  const pct = Math.round((idx / ALL.length) * 100);
+  let field = '';
+  const v = answers[q.key];
+
+  if (q.type === 'text'){
+    field = `<input type="text" id="f" value="${v ? esc(v) : ''}" placeholder="${q.ph||''}" oninput="setVal(this.value)">`;
+  } else if (q.type === 'textarea'){
+    field = `<textarea id="f" placeholder="Пишите свободно, списком или абзацем" oninput="setVal(this.value)">${v ? esc(v) : ''}</textarea>`;
+  } else if (q.type === 'radio'){
+    field = `<div class="opts">${q.opts.map((o,i)=>`
+      <label class="opt ${v===o?'checked':''}">
+        <input type="radio" name="o" ${v===o?'checked':''} onchange="setVal(${JSON.stringify(o).replace(/"/g,'&quot;')})">
+        <span>${esc(o)}</span>
+      </label>`).join('')}</div>`;
+  } else if (q.type === 'checks'){
+    const sel = Array.isArray(v) ? v : [];
+    field = `<div class="opts">${q.opts.map(o=>`
+      <label class="opt ${sel.includes(o)?'checked':''}">
+        <input type="checkbox" ${sel.includes(o)?'checked':''} onchange="toggle(${JSON.stringify(o).replace(/"/g,'&quot;')})">
+        <span>${esc(o)}</span>
+      </label>`).join('')}</div>`;
+  }
+
+  app.innerHTML = `
+    <div class="progress"><i style="width:${pct}%"></i></div>
+    <div class="block-name">${esc(q.block)} · вопрос ${idx+1} из ${ALL.length}</div>
+    <p class="q">${esc(q.q)}</p>
+    ${q.hint ? `<p class="hint">${esc(q.hint)}</p>` : '<div style="height:8px"></div>'}
+    ${field}
+    <div class="row">
+      ${idx>0 ? '<button class="btn ghost" onclick="prev()">← Назад</button>' : ''}
+      <button class="btn" id="next" onclick="next()" ${isFilled()?'':'disabled'}>${idx===ALL.length-1?'Показать результат':'Дальше →'}</button>
+    </div>`;
+
+  const f = document.getElementById('f');
+  if (f && q.type !== 'radio' && q.type !== 'checks') f.focus();
+}
+
+function setVal(v){ answers[ALL[idx].key] = v; refreshNext(); }
+function toggle(o){
+  const k = ALL[idx].key;
+  const cur = Array.isArray(answers[k]) ? answers[k] : [];
+  answers[k] = cur.includes(o) ? cur.filter(x=>x!==o) : [...cur, o];
+  renderQuestion();
+}
+function isFilled(){
+  const q = ALL[idx]; const v = answers[q.key];
+  if (q.type === 'checks') return Array.isArray(v) && v.length > 0;
+  return !!(v && String(v).trim());
+}
+function refreshNext(){
+  const b = document.getElementById('next');
+  if (b) b.disabled = !isFilled();
+  document.querySelectorAll('.opt').forEach(l=>{
+    const i = l.querySelector('input');
+    if (i && i.type === 'radio') l.classList.toggle('checked', i.checked);
+  });
+  if (ALL[idx].type === 'checks' || ALL[idx].type === 'radio') refreshNextState();
+}
+function refreshNextState(){
+  const b = document.getElementById('next');
+  if (b) b.disabled = !isFilled();
+}
+function next(){ if (!isFilled()) return; idx++; render(); }
+function prev(){ idx--; render(); }
+
+/* ---------- логика рекомендаций ---------- */
+const HOURS = { "до 3 часов":2, "3–7 часов":5, "7–12 часов":9, "12–20 часов":16, "больше 20 часов":22 };
+
+const CATALOG = [
+  { id:"reports", title:"Автосборка отчётов и сводок",
+    text:"Один раз настроенная выгрузка собирает цифры из таблиц и систем в готовый отчёт по расписанию.",
+    hit:["отчёт","отчет","сводк","excel","таблиц","1с","выгруз","аналитик"] },
+  { id:"inbox", title:"Сбор входящих в одно место",
+    text:"Заявки и сообщения из почты, мессенджеров и форм падают в одну таблицу или CRM — без ручного копирования.",
+    hit:["копир","перенос","пересыл","заявк","почт","мессендж","чат","вручную"] },
+  { id:"answers", title:"AI-ассистент для ответов клиентам",
+    text:"Отвечает на типовые вопросы по вашим правилам и материалам, сложные передаёт вам с готовым контекстом.",
+    hit:["ответ","клиент","консульт","вопрос","переписк","поддержк","direct","директ"] },
+  { id:"content", title:"Помощник для контента",
+    text:"Черновики постов и описаний по вашему стилю, из одного текста — версии для разных площадок.",
+    hit:["пост","контент","соцсет","instagram","вконтакт","reels","текст","описан","публикац"] },
+  { id:"docs", title:"Шаблоны документов и коммерческих предложений",
+    text:"Договор, КП и смета собираются из шаблона и данных клиента за минуты вместо вечера.",
+    hit:["договор","кп","коммерческ","смет","документ","презентац","бриф","заявлен"] },
+  { id:"calc", title:"Расчёты под заказ",
+    text:"Калькулятор считает стоимость и расход материалов по вашим формулам — без пересчёта вручную.",
+    hit:["расчёт","расчет","калькул","стоимост","смет","материал","замер","шнур","заказ"] },
+  { id:"order", title:"Порядок в файлах и задачах",
+    text:"Единая структура папок и авто-разбор входящих файлов: нужное находится за секунды.",
+    hit:["файл","папк","порядок","структур","архив","найти","haos","хаос","задач"] },
+  { id:"faq", title:"База знаний, которая отвечает сама",
+    text:"Собирает ваши объяснения в один помощник: новичку не нужно дёргать вас по каждому вопросу.",
+    hit:["объясн","нович","обучен","инструкц","вопрос","база знан","команд"] }
+];
+
+function pickRecommendations(){
+  const hay = [answers.routine_tasks, answers.manual_work, answers.pain, answers.postponed,
+               (answers.tools||[]).join(" "), answers.freed_time].filter(Boolean).join(" ").toLowerCase();
+  const scored = CATALOG.map(c => {
+    let s = 0;
+    c.hit.forEach(h => { if (hay.includes(h)) s += 1; });
+    return {...c, score:s};
+  }).sort((a,b)=>b.score-a.score);
+
+  const top = scored.filter(c=>c.score>0).slice(0,3);
+  const fillers = scored.filter(c=>c.score===0);
+  while (top.length < 3 && fillers.length) top.push(fillers.shift());
+  return top.slice(0,3);
+}
+
+function renderResult(){
+  const recs = pickRecommendations();
+  const h = HOURS[answers.routine_hours] || 7;
+  const low = Math.max(2, Math.round(h * 0.25));
+  const high = Math.max(low + 2, Math.round(h * 0.5));
+  const budgetFree = answers.budget !== "Есть, готов(а) вкладываться";
+
+  app.innerHTML = `
+    <div class="block-name">Результат</div>
+    <p class="q" style="margin-bottom:14px">С чего начинать автоматизацию именно вам</p>
+    <div class="result-hero">
+      <span class="big">${low}–${high} ч</span>
+      <span class="lead" style="margin:0">в неделю можно вернуть, если начать с одной задачи</span>
+    </div>
+    <p class="hint" style="margin-top:6px">Оценка от вашей рутины в ${esc(answers.routine_hours||"—")}: автоматизируется обычно четверть-половина ручных операций, не всё сразу.</p>
+
+    <ul class="recs">
+      ${recs.map(r=>`<li><div><h3>${esc(r.title)}</h3><p>${esc(r.text)}</p></div></li>`).join("")}
+    </ul>
+
+    <ul class="steps">
+      <li><b>1</b><span>Выберите <strong>одну</strong> задачу из списка — ту, что повторяется чаще всего.</span></li>
+      <li><b>2</b><span>Соберите по ней материалы: примеры, шаблоны, правила ответов. Это половина работы.</span></li>
+      <li><b>3</b><span>${budgetFree ? 'Запустите бесплатный пилот на этой задаче — без вложений, чтобы увидеть эффект.' : 'Запустите пилот на этой задаче и сверьте результат с потраченными часами.'}</span></li>
+    </ul>
+
+    <div class="row">
+      <a class="btn" href="https://t.me/nadjat_29" target="_blank" rel="noopener">Обсудить первый шаг в Telegram →</a>
+      <button class="btn ghost" onclick="downloadTxt()">Скачать результат</button>
+      <button class="btn ghost" onclick="restart()">Пройти заново</button>
+    </div>
+
+    <p class="note">Диагностика считает рекомендации по правилам, без отправки данных на сервер. Это ориентир, а не аудит: точный план собирается на разборе.</p>`;
+
+  window.__result = { recs, low, high };
+}
+
+function downloadTxt(){
+  const r = window.__result; if (!r) return;
+  const lines = [
+    "КОМПАС АВТОМАТИЗАЦИИ — результат диагностики",
+    "Дата: " + new Date().toLocaleString("ru-RU"),
+    "",
+    ...ALL.map((q,i)=>`${i+1}. ${q.q}\n   → ${Array.isArray(answers[q.key]) ? answers[q.key].join(", ") : (answers[q.key]||"—")}`),
+    "",
+    `Потенциал: ${r.low}–${r.high} часов в неделю`,
+    "",
+    "С чего начать:",
+    ...r.recs.map((x,i)=>`${i+1}. ${x.title} — ${x.text}`),
+    "",
+    "Следующий шаг: обсудить пилот в Telegram https://t.me/nadjat_29",
+    "Дизайн процессов · design-processov.ru/kompas"
+  ];
+  const blob = new Blob([lines.join("\n")], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "kompas-rezultat.txt";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function restart(){
+  Object.keys(answers).forEach(k=>delete answers[k]);
+  idx = -1; render();
+}
+
+render();
+</script>
+</body>
+</html>
