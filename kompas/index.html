@@ -112,16 +112,79 @@ const BLOCKS = [
 
 const ALL = BLOCKS.flatMap(b => b.questions.map(q => ({...q, block:b.title})));
 const answers = {};
-let idx = -1; // -1 = intro
+let idx = 0;
+let phase = "intro";   // intro -> contact -> q -> result
+let leadSent = false;
+
+const LEAD_ENDPOINT = "https://formsubmit.co/ajax/nadezdatarasova1987@yandex.ru";
 
 const app = document.getElementById('app');
 
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 function render(){
-  if (idx < 0) return renderIntro();
-  if (idx >= ALL.length) return renderResult();
+  if (phase === "intro") return renderIntro();
+  if (phase === "contact") return renderContact();
+  if (phase === "result") return renderResult();
   renderQuestion();
+}
+
+function renderContact(){
+  app.innerHTML = `
+    <div class="block-name">Знакомство</div>
+    <p class="q">Как к вам обращаться?</p>
+    <p class="hint">Диагностика анонимная для всех, но мне нужно знать, кому отвечать. Поля со звёздочкой обязательны.</p>
+    <div style="display:grid;gap:12px">
+      <label>
+        <span class="hint" style="margin:0 0 6px;display:block">Имя *</span>
+        <input type="text" id="c-name" value="${answers.name?esc(answers.name):''}" placeholder="Например: Анна" oninput="contactInput()">
+      </label>
+      <label>
+        <span class="hint" style="margin:0 0 6px;display:block">E-mail *</span>
+        <input type="text" id="c-email" inputmode="email" value="${answers.email?esc(answers.email):''}" placeholder="you@example.ru" oninput="contactInput()">
+      </label>
+      <label>
+        <span class="hint" style="margin:0 0 6px;display:block">Телефон *</span>
+        <input type="text" id="c-phone" inputmode="tel" value="${answers.phone?esc(answers.phone):''}" placeholder="+7 900 000-00-00" oninput="contactInput()">
+      </label>
+    </div>
+    <label class="opt" style="margin-top:16px">
+      <input type="checkbox" id="c-consent" ${answers.consent?'checked':''} onchange="contactInput()">
+      <span style="font-size:14px">Согласен(на) на обработку персональных данных для ответа на заявку — <a href="/privacy/" target="_blank" rel="noopener">политика</a></span>
+    </label>
+    <p class="hint" id="c-err" style="color:#b3261e;display:none;margin:12px 0 0"></p>
+    <div class="row">
+      <button class="btn ghost" onclick="backToIntro()">← Назад</button>
+      <button class="btn" id="c-next" onclick="submitContact()" disabled>К вопросам →</button>
+    </div>`;
+  contactInput();
+}
+
+function contactInput(){
+  const name = (document.getElementById('c-name')||{}).value || "";
+  const email = (document.getElementById('c-email')||{}).value || "";
+  const phone = (document.getElementById('c-phone')||{}).value || "";
+  const consent = !!(document.getElementById('c-consent')||{}).checked;
+  answers.name = name.trim();
+  answers.email = email.trim();
+  answers.phone = phone.trim();
+  answers.consent = consent;
+  const ok = answers.name.length >= 2
+          && /^[^\s@]+@[^\s@]+\.[a-zA-Zа-яА-Я]{2,}$/.test(answers.email)
+          && answers.phone.replace(/\D/g,'').length >= 10
+          && consent;
+  const b = document.getElementById('c-next');
+  if (b) b.disabled = !ok;
+  const err = document.getElementById('c-err');
+  if (err) err.style.display = 'none';
+}
+
+function backToIntro(){ phase = "intro"; render(); }
+
+function submitContact(){
+  const b = document.getElementById('c-next');
+  if (b && b.disabled) return;
+  phase = "q"; idx = 0; render();
 }
 
 function renderIntro(){
@@ -133,11 +196,11 @@ function renderIntro(){
       <span><i class="dot"></i>без регистрации</span>
       <span><i class="dot"></i>результат сразу на экране</span>
     </div>
-    <p class="hint" style="margin-bottom:0">Отвечайте как есть, без «правильных» вариантов — чем честнее, тем точнее рекомендации. Ничего не отправляется на сервер: всё считается здесь, в браузере.</p>
+    <p class="hint" style="margin-bottom:0">Отвечайте как есть, без «правильных» вариантов — чем честнее, тем точнее рекомендации. В начале попрошу имя и контакт: без них не получится ответить. Ответы на вопросы остаются в вашем браузере, мне уходят только имя, контакт и итоговый результат.</p>
     <div class="row"><button class="btn" onclick="start()">Начать диагностику →</button></div>`;
 }
 
-function start(){ idx = 0; render(); }
+function start(){ phase = "contact"; render(); }
 
 function renderQuestion(){
   const q = ALL[idx];
@@ -204,8 +267,16 @@ function refreshNextState(){
   const b = document.getElementById('next');
   if (b) b.disabled = !isFilled();
 }
-function next(){ if (!isFilled()) return; idx++; render(); }
-function prev(){ idx--; render(); }
+function next(){
+  if (!isFilled()) return;
+  idx++;
+  if (idx >= ALL.length) { phase = "result"; render(); return; }
+  render();
+}
+function prev(){
+  if (idx === 0) { phase = "contact"; render(); return; }
+  idx--; render();
+}
 
 /* ---------- логика рекомендаций ---------- */
 const HOURS = { "до 3 часов":2, "3–7 часов":5, "7–12 часов":9, "12–20 часов":16, "больше 20 часов":22 };
@@ -261,7 +332,7 @@ function renderResult(){
 
   app.innerHTML = `
     <div class="block-name">Результат</div>
-    <p class="q" style="margin-bottom:14px">С чего начинать автоматизацию именно вам</p>
+    <p class="q" style="margin-bottom:14px">${answers.name ? esc(answers.name) + ", с чего начинать автоматизацию именно вам" : "С чего начинать автоматизацию именно вам"}</p>
     <div class="result-hero">
       <span class="big">${low}–${high} ч</span>
       <span class="lead" style="margin:0">в неделю можно вернуть, если начать с одной задачи</span>
@@ -284,9 +355,42 @@ function renderResult(){
       <button class="btn ghost" onclick="restart()">Пройти заново</button>
     </div>
 
-    <p class="note">Диагностика считает рекомендации по правилам, без отправки данных на сервер. Это ориентир, а не аудит: точный план собирается на разборе.</p>`;
+    <p class="note" id="lead-status">Отправляю заявку…</p>
+
+    <p class="note">Диагностика считает рекомендации по правилам, без отправки данных на сервер. Имя, контакт и ответы уходят только мне — чтобы ответить. Это ориентир, а не аудит: точный план собирается на разборе.</p>`;
 
   window.__result = { recs, low, high };
+  if (!leadSent) sendLead(recs, low, high);
+}
+
+function setLeadStatus(text){
+  const el = document.getElementById('lead-status');
+  if (el) el.textContent = text;
+}
+
+function sendLead(recs, low, high){
+  leadSent = true;
+  const payload = {
+    "Имя": answers.name || "—",
+    "E-mail": answers.email || "—",
+    "Телефон": answers.phone || "—",
+    "_subject": "Компас: новая заявка — " + (answers.name || "без имени"),
+    "_template": "table"
+  };
+  ALL.forEach(q => {
+    payload[q.q] = Array.isArray(answers[q.key]) ? answers[q.key].join(", ") : (answers[q.key] || "—");
+  });
+  payload["Потенциал, часов в неделю"] = low + "–" + high;
+  payload["Рекомендации"] = recs.map(r => r.title).join("; ");
+
+  fetch(LEAD_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
+  .then(() => setLeadStatus("Заявка у меня. Отвечу на " + (answers.email || "указанный контакт") + "."))
+  .catch(() => setLeadStatus("Автоматическая отправка не прошла. Напишите в Telegram — я на связи: https://t.me/nadjat_29"));
 }
 
 function downloadTxt(){
@@ -315,7 +419,7 @@ function downloadTxt(){
 
 function restart(){
   Object.keys(answers).forEach(k=>delete answers[k]);
-  idx = -1; render();
+  idx = 0; phase = "intro"; leadSent = false; render();
 }
 
 render();
