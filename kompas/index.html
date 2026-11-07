@@ -116,7 +116,7 @@ let idx = 0;
 let phase = "intro";   // intro -> contact -> q -> result
 let leadSent = false;
 
-const LEAD_ENDPOINT = "https://formsubmit.co/ajax/nadezdatarasova1987@yandex.ru";
+const LEAD_KEY = ""; // ключ Web3Forms — вставить, когда будет; пусто = заявка только в Telegram
 
 const app = document.getElementById('app');
 
@@ -350,7 +350,7 @@ function renderResult(){
     </ul>
 
     <div class="row">
-      <a class="btn" href="https://t.me/nadjat_29" target="_blank" rel="noopener">Обсудить первый шаг в Telegram →</a>
+      <button class="btn" onclick="sendViaTelegram()">Отправить заявку в Telegram →</button>
       <button class="btn ghost" onclick="downloadTxt()">Скачать результат</button>
       <button class="btn ghost" onclick="restart()">Пройти заново</button>
     </div>
@@ -368,29 +368,63 @@ function setLeadStatus(text){
   if (el) el.textContent = text;
 }
 
+function leadText(){
+  const r = window.__result || { recs: [], low: 0, high: 0 };
+  const lines = ["Новая заявка с «Компаса автоматизации»", ""];
+  lines.push("Имя: " + (answers.name || "—"));
+  lines.push("E-mail: " + (answers.email || "—"));
+  lines.push("Телефон: " + (answers.phone || "—"));
+  lines.push("");
+  ALL.forEach(q => {
+    const v = Array.isArray(answers[q.key]) ? answers[q.key].join(", ") : (answers[q.key] || "—");
+    lines.push(q.q + " — " + v);
+  });
+  lines.push("");
+  lines.push("Потенциал: " + r.low + "–" + r.high + " ч/нед");
+  lines.push("Рекомендации: " + r.recs.map(x => x.title).join("; "));
+  lines.push("");
+  lines.push("Ответить: " + (answers.email || "по контакту из заявки"));
+  return lines.join("\n");
+}
+
 function sendLead(recs, low, high){
   leadSent = true;
   const payload = {
+    access_key: LEAD_KEY,
+    subject: "Компас: заявка — " + (answers.name || "без имени"),
+    from_name: "Компас автоматизации",
     "Имя": answers.name || "—",
     "E-mail": answers.email || "—",
-    "Телефон": answers.phone || "—",
-    "_subject": "Компас: новая заявка — " + (answers.name || "без имени"),
-    "_template": "table"
+    "Телефон": answers.phone || "—"
   };
   ALL.forEach(q => {
     payload[q.q] = Array.isArray(answers[q.key]) ? answers[q.key].join(", ") : (answers[q.key] || "—");
   });
-  payload["Потенциал, часов в неделю"] = low + "–" + high;
+  payload["Потенциал, ч/нед"] = low + "–" + high;
   payload["Рекомендации"] = recs.map(r => r.title).join("; ");
 
-  fetch(LEAD_ENDPOINT, {
+  if (!LEAD_KEY) {
+    setLeadStatus("Заявка пока не отправляется сама: нажмите «Отправить в Telegram» — она придёт мне с вашими ответами.");
+    return;
+  }
+  fetch("https://api.web3forms.com/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
     body: JSON.stringify(payload)
   })
   .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
-  .then(() => setLeadStatus("Заявка у меня. Отвечу на " + (answers.email || "указанный контакт") + "."))
-  .catch(() => setLeadStatus("Автоматическая отправка не прошла. Напишите в Telegram — я на связи: https://t.me/nadjat_29"));
+  .then(d => {
+    if (d && d.success === false) throw new Error(d.message || "отказ сервиса");
+    setLeadStatus("Заявка у меня. Отвечу на " + (answers.email || "указанный контакт") + ".");
+  })
+  .catch(() => setLeadStatus("Автоматическая отправка не прошла — нажмите «Отправить в Telegram», заявка придёт мне сразу."));
+}
+
+function sendViaTelegram(){
+  const url = "https://t.me/share/url?url=" + encodeURIComponent("https://design-processov.ru/kompas/") +
+              "&text=" + encodeURIComponent(leadText());
+  window.open(url, "_blank", "noopener");
+  setLeadStatus("Открылся Telegram — нажмите «Отправить», и заявка придёт мне.");
 }
 
 function downloadTxt(){
@@ -398,6 +432,9 @@ function downloadTxt(){
   const lines = [
     "КОМПАС АВТОМАТИЗАЦИИ — результат диагностики",
     "Дата: " + new Date().toLocaleString("ru-RU"),
+    "Имя: " + (answers.name || "—"),
+    "E-mail: " + (answers.email || "—"),
+    "Телефон: " + (answers.phone || "—"),
     "",
     ...ALL.map((q,i)=>`${i+1}. ${q.q}\n   → ${Array.isArray(answers[q.key]) ? answers[q.key].join(", ") : (answers[q.key]||"—")}`),
     "",
