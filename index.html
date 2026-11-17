@@ -509,6 +509,8 @@ section{padding:100px 24px}.section-inner{max-width:1100px}h2{font-size:clamp(2r
 .karta-step b{display:block;margin-bottom:6px;color:var(--accent-strong);font-size:.85rem;letter-spacing:.08em}
 .karta-step span{display:block;color:var(--ink);font-size:.98rem;line-height:1.4}
 .karta-btn{display:inline-block}
+.karta-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+@media(max-width:640px){.karta-actions{flex-direction:column;align-items:stretch}}
 .karta-note{margin:14px 0 0;color:var(--ink-soft);font-size:.88rem}
 .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:6px}
 .hero-actions .btn{margin:0}
@@ -552,6 +554,7 @@ section{padding:100px 24px}.section-inner{max-width:1100px}h2{font-size:clamp(2r
     <p class="lead">Боты, сайты, консалтинг по автоматизации и брендинг — под одним взглядом на ваш бизнес.</p>
     <div class="hero-actions">
       <a href="https://t.me/karta_avtomatizacii_bot" class="btn btn-primary">Пройти диагностику в Telegram</a>
+      <a href="https://max.ru/se14469808_bot" class="btn btn-secondary" target="_blank" rel="noopener">Пройти диагностику в MAX</a>
       <a href="/kompas/" class="btn btn-secondary">Диагностика на сайте</a>
     </div>
   </div>
@@ -696,7 +699,7 @@ section{padding:100px 24px}.section-inner{max-width:1100px}h2{font-size:clamp(2r
 
 <section id="karta" class="karta">
   <div class="section-inner">
-    <div class="karta-label">Бесплатный бот в Telegram</div>
+    <div class="karta-label">Бесплатный бот в Telegram и MAX</div>
     <h2>Карта автоматизации за 20 минут</h2>
     <p class="karta-lead">Отвечаете на вопросы про 10 процессов своего бизнеса — получаете карту:
       что автоматизировать первым, сколько это стоит и за сколько окупится. Считаем по вашим ответам,
@@ -706,8 +709,11 @@ section{padding:100px 24px}.section-inner{max-width:1100px}h2{font-size:clamp(2r
       <div class="karta-step"><b>2</b><span>Часы, деньги и окупаемость</span></div>
       <div class="karta-step"><b>3</b><span>Карта файлом и разбор</span></div>
     </div>
-    <a href="https://t.me/karta_avtomatizacii_bot" class="btn btn-primary karta-btn">Открыть бота <span aria-hidden="true">→</span></a>
-    <p class="karta-note">Без установки и регистрации — открывается внутри Telegram</p>
+    <div class="karta-actions">
+      <a href="https://t.me/karta_avtomatizacii_bot" class="btn btn-primary karta-btn">Открыть в Telegram <span aria-hidden="true">→</span></a>
+      <a href="https://max.ru/se14469808_bot" class="btn btn-secondary karta-btn" target="_blank" rel="noopener">Открыть в MAX <span aria-hidden="true">→</span></a>
+    </div>
+    <p class="karta-note">Без установки и регистрации — открывается внутри вашего мессенджера. Бот один и тот же, карта считается так же.</p>
   </div>
 </section>
 
@@ -717,7 +723,8 @@ section{padding:100px 24px}.section-inner{max-width:1100px}h2{font-size:clamp(2r
     <div class="cta-label">Бесплатно • 5 минут</div>
     <h2>Не знаете, с чего начать?</h2>
     <p>Получите персональный список направлений для автоматизации вашего бизнеса.</p>
-    <a href="https://t.me/karta_avtomatizacii_bot" class="btn btn-primary">Открыть бота «Карта автоматизации» <span aria-hidden="true">→</span></a>
+    <a href="https://t.me/karta_avtomatizacii_bot" class="btn btn-primary">Открыть в Telegram <span aria-hidden="true">→</span></a>
+    <a href="https://max.ru/se14469808_bot" class="btn btn-secondary" style="margin-left:10px" target="_blank" rel="noopener">Открыть в MAX</a>
     <a href="/kompas/" class="btn btn-secondary" style="margin-left:10px">Диагностика на сайте</a>
   </div>
 </div>

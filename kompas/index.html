@@ -203,7 +203,10 @@ function renderIntro(){
       <span><i class="dot"></i>результат сразу на экране</span>
     </div>
     <p class="hint" style="margin-bottom:0">Отвечайте как есть, без «правильных» вариантов — чем честнее, тем точнее рекомендации. В начале попрошу имя и контакт: без них не получится ответить. Ответы на вопросы остаются в вашем браузере, мне уходят только имя, контакт и итоговый результат.</p>
-    <div class="row"><button class="btn" onclick="start()">Начать диагностику →</button></div>`;
+    <div class="row"><button class="btn" onclick="start()">Начать диагностику →</button></div>
+    <p class="hint" style="margin-top:14px">Удобнее в мессенджере? Карта автоматизации есть в
+      <a href="https://t.me/karta_avtomatizacii_bot" target="_blank" rel="noopener">Telegram</a> и
+      <a href="https://max.ru/se14469808_bot" target="_blank" rel="noopener">MAX</a> — там бот пришлёт карту файлом.</p>`;
 }
 
 function start(){ phase = "contact"; render(); }
