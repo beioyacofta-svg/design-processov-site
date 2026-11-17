@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Компас автоматизации — диагностика за 5 минут</title>
+<link rel="canonical" href="https://design-processov.ru/kompas/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="description" content="12 вопросов о вашей рутине и персональный список направлений, с которых стоит начать автоматизацию.">
 <style>
 :root{
@@ -150,9 +152,10 @@ function renderContact(){
     </div>
     <label class="opt" style="margin-top:16px">
       <input type="checkbox" id="c-consent" ${answers.consent?'checked':''} onchange="contactInput()">
-      <span style="font-size:14px">Согласен(на) на обработку персональных данных для ответа на заявку — <a href="/privacy/" target="_blank" rel="noopener">политика</a></span>
+      <span style="font-size:14px">Согласен(на) на <a href="/consent/" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на заявку — подробнее в <a href="/privacy/" target="_blank" rel="noopener">политике</a></span>
     </label>
     <p class="hint" id="c-err" style="color:#b3261e;display:none;margin:12px 0 0"></p>
+      <p class="hint" style="margin:6px 0 0">Отправляя заявку, вы принимаете условия <a href="/offer/" target="_blank" rel="noopener">публичной оферты</a>.</p>
     <div class="row">
       <button class="btn ghost" onclick="backToIntro()">← Назад</button>
       <button class="btn" id="c-next" onclick="submitContact()" disabled>К вопросам →</button>

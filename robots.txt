@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /kompas/thanks/
+
+Sitemap: https://design-processov.ru/sitemap.xml

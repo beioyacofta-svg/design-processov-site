@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Собрать архив сайта
         run: |
-          zip -r site.zip index.html kompas privacy
+          zip -r site.zip . -x ".git/*" ".github/*" "CNAME"
       - name: Отправить на Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
