@@ -65,6 +65,9 @@ input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent);bo
 .note{font-size:13px;color:var(--ink-soft);margin-top:22px;padding-top:18px;border-top:1px solid rgba(20,42,34,.10)}
 footer{margin-top:34px;font-size:13px;color:var(--ink-soft);text-align:center}
 @media(max-width:560px){.card{padding:24px 20px;border-radius:18px}}
+.legal-footer{text-align:center;padding:26px 16px 44px;font-size:12.5px;
+  line-height:1.7;color:#4f6d61}
+.legal-footer a{color:#0a7a5c;text-decoration:none;border-bottom:1px solid rgba(10,122,92,.3)}
 </style>
 </head>
 <body>
@@ -462,5 +465,11 @@ function restart(){
 
 render();
 </script>
+<footer class="legal-footer">
+  Тарасова Надежда · ИНН 621901434861 · самозанятая (налог на профессиональный доход)<br>
+  <a href="/privacy/">Политика данных</a> ·
+  <a href="/consent/">Согласие на обработку</a> ·
+  <a href="/offer/">Публичная оферта</a>
+</footer>
 </body>
 </html>
