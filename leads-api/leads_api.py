@@ -14,7 +14,7 @@ from collections import defaultdict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-ENV_FILE = Path("/etc/leads-api.env")
+ENV_FILE = Path(os.getenv("ENV_FILE", "/etc/leads-api.env"))
 LOG_DIR = Path(os.getenv("LOG_DIR", "/home/agent/leads-api/logs"))
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG = LOG_DIR / "leads.log"
@@ -212,5 +212,8 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(cfg().get("PORT", "8099"))
-    log(f"старт на 127.0.0.1:{port}")
-    ThreadingHTTPServer(("127.0.0.1", port), Handler).serve_forever()
+    # адрес прослушивания: на сервере (systemd) — только localhost, в контейнере — все интерфейсы,
+    # иначе docker не сможет достучаться до приложения через проброс порта
+    host = os.getenv("HOST", "127.0.0.1")
+    log(f"старт на {host}:{port}")
+    ThreadingHTTPServer((host, port), Handler).serve_forever()
