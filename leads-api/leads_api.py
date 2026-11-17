@@ -110,14 +110,17 @@ def send_to_telegram(payload: dict) -> tuple[bool, str]:
         req = urllib.request.Request(f"{root}/bot{token}/sendMessage", data=body)
         try:
             with urllib.request.urlopen(req, timeout=25) as r:
-                ok = json.loads(r.read()).get("ok", False)
-            return (True, "отправлено") if ok else (False, "telegram ответил не ok")
+                res = json.loads(r.read())
+            if res.get("ok"):
+                mid = (res.get("result") or {}).get("message_id")
+                return True, f"отправлено, сообщение {mid}"
+            return False, "telegram ответил не ok"
         except Exception as e:  # noqa: BLE001
             return False, f"{type(e).__name__}: {str(e)[:120]}"
 
     ok, info = deliver(data)
     if ok:
-        return True, "в тему «Задачи»"
+        return True, f"в тему «Задачи» ({info})"
 
     # резерв: бот может быть не добавлен в группу — тогда шлём владельцу в личку
     owner = c.get("OWNER_ID", "").strip()
