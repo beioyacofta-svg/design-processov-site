@@ -118,7 +118,7 @@ let idx = 0;
 let phase = "intro";   // intro -> contact -> q -> result
 let leadSent = false;
 
-const LEAD_KEY = ""; // ключ Web3Forms — вставить, когда будет; пусто = заявка только в Telegram
+const LEADS_URL = "https://avito.design-processov.ru/lead"; // ключ Web3Forms — вставить, когда будет; пусто = заявка только в Telegram
 
 const app = document.getElementById('app');
 
@@ -392,35 +392,33 @@ function leadText(){
 
 function sendLead(recs, low, high){
   leadSent = true;
-  const payload = {
-    access_key: LEAD_KEY,
-    subject: "Компас: заявка — " + (answers.name || "без имени"),
-    from_name: "Компас автоматизации",
-    "Имя": answers.name || "—",
-    "E-mail": answers.email || "—",
-    "Телефон": answers.phone || "—"
-  };
+  const detail = {};
   ALL.forEach(q => {
-    payload[q.q] = Array.isArray(answers[q.key]) ? answers[q.key].join(", ") : (answers[q.key] || "—");
+    const v = answers[q.key];
+    detail[q.q] = Array.isArray(v) ? v.join(", ") : (v || "—");
   });
-  payload["Потенциал, ч/нед"] = low + "–" + high;
-  payload["Рекомендации"] = recs.map(r => r.title).join("; ");
-
-  if (!LEAD_KEY) {
-    setLeadStatus("Заявка пока не отправляется сама: нажмите «Отправить в Telegram» — она придёт мне с вашими ответами.");
-    return;
-  }
-  fetch("https://api.web3forms.com/submit", {
+  detail["Потенциал, ч/нед"] = low + "–" + high;
+  const payload = {
+    name: answers.name || "",
+    email: answers.email || "",
+    phone: answers.phone || "",
+    consent: !!answers.consent,
+    answers: detail,
+    recs: recs.map(r => r.title)
+  };
+  setLeadStatus("Отправляю заявку…");
+  fetch(LEADS_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify(payload)
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    keepalive: true
   })
-  .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
-  .then(d => {
-    if (d && d.success === false) throw new Error(d.message || "отказ сервиса");
-    setLeadStatus("Заявка у меня. Отвечу на " + (answers.email || "указанный контакт") + ".");
-  })
-  .catch(() => setLeadStatus("Автоматическая отправка не прошла — нажмите «Отправить в Telegram», заявка придёт мне сразу."));
+    .then(r => r.json().catch(() => ({ ok: false })))
+    .then(d => {
+      if (!d || !d.ok) throw new Error((d && d.error) || "сервис отказал");
+      setLeadStatus("Заявка у меня. Отвечу на " + (answers.email || "указанный контакт") + ".");
+    })
+    .catch(() => setLeadStatus("Автоматическая отправка не прошла — нажмите «Отправить в Telegram», заявка придёт мне сразу."));
 }
 
 function sendViaTelegram(){
