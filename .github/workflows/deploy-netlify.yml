@@ -1,0 +1,21 @@
+name: Деплой на Netlify
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Собрать архив сайта
+        run: |
+          zip -r site.zip index.html kompas privacy
+      - name: Отправить на Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          curl -sS -X POST             -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN"             -H "Content-Type: application/zip"             --data-binary @site.zip             "https://api.netlify.com/api/v1/sites/30ada182-8f89-4e34-995f-edafb18cd438/deploys?production=true"             -o deploy.json
+          python3 -c "import json;d=json.load(open('deploy.json'));print('deploy:',d.get('id'),d.get('state'))"
