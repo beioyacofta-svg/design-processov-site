@@ -115,9 +115,15 @@
     function allow(){ if(!planLocked())return true; showPaywall(); return false }
     async function apiCall(path,opt){
       const o=opt||{};
-      const r=await fetch(API+path,{method:o.method||'GET',
+      const send=()=>fetch(API+path,{method:o.method||'GET',
         headers:Object.assign({'Content-Type':'application/json'},o.token?{Authorization:'Bearer '+o.token}:{}),
         body:o.body?JSON.stringify(o.body):undefined});
+      let r;
+      try{ r=await send() }
+      catch(e1){
+        await new Promise(ok=>setTimeout(ok,700));
+        try{ r=await send() }catch(e2){ throw Object.assign(new Error('network'),{status:0,code:'network'}) }
+      }
       let d={}; try{d=await r.json()}catch{}
       if(!r.ok) throw Object.assign(new Error(d.message||d.error||('http_'+r.status)),{status:r.status,code:d.error});
       return d;
@@ -187,6 +193,7 @@
       err.classList.remove('show'); btn.disabled=true; btn.textContent='Проверяю…';
       try{
         const d=await apiCall('/trial',{method:'POST',body:{phone}});
+        err.textContent=''; err.classList.remove('show');
         localStorage.setItem(AUTH_KEY,d.token); savePlan(d); closeGate(); render();
         if(d.state==='trial'&&!d.trialUsedBefore) toast(`Бесплатный период начался: ${d.trialDays} дней.`);
         else if(d.state==='trial') toast(`Этот номер уже использовал бесплатный период. Осталось ${plural(d.daysLeft,'день','дня','дней')}.`);
@@ -205,7 +212,7 @@
       const token=localStorage.getItem(AUTH_KEY);
       if(!token||demoExpired)return;
       try{ savePlan(await apiCall('/status',{token})) }
-      catch(ex){ if(ex.status===401){ localStorage.removeItem(AUTH_KEY); openGate() } }
+      catch(ex){ if(ex.status===401||ex.status===404){ localStorage.removeItem(AUTH_KEY); localStorage.removeItem(PLAN_KEY); plan=null; renderPlan(); openGate() } }
     }
     document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible')refreshPlan() });
 
