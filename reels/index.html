@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ролики из текста — Дизайн процессов</title>
+<style>
+  :root{
+    --ink:#101a17; --muted:#5b6b64; --paper:#ffffff; --bg:#f6f9f7;
+    --accent:#0e9d78; --line:#dfe8e3; --soft:#eaf5f0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:17px/1.6 -apple-system,"Segoe UI",system-ui,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:56px 20px 80px}
+  header{max-width:780px}
+  .eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+           color:var(--accent);font-weight:800}
+  h1{font-size:clamp(34px,5.6vw,60px);line-height:1.04;margin:.35em 0 .3em;letter-spacing:-.02em}
+  .lead{font-size:20px;color:var(--muted);max-width:640px}
+  .badges{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 0}
+  .badge{background:var(--paper);border:1px solid var(--line);border-radius:999px;
+         padding:8px 14px;font-size:14px;font-weight:600}
+  h2{font-size:clamp(24px,3.4vw,34px);margin:64px 0 8px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 26px;max-width:660px}
+  .grid{display:grid;gap:18px}
+  .grid.three{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:26px}
+  .card h3{margin:0 0 6px;font-size:20px}
+  .price{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:10px 0 2px}
+  .price small{font-size:15px;font-weight:600;color:var(--muted)}
+  .card ul{padding-left:20px;margin:14px 0 0;color:var(--muted);font-size:15.5px}
+  .card ul li{margin:6px 0}
+  .card.best{border:2px solid var(--accent);box-shadow:0 14px 40px rgba(14,157,120,.10)}
+  .tag{display:inline-block;background:var(--soft);color:#0b7a5e;border-radius:8px;
+       padding:4px 10px;font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  .steps{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+         list-style:none;padding:0;margin:0}
+  .steps li{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px}
+  .steps b{display:block;font-size:15px;color:var(--accent);margin-bottom:6px}
+  .split{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .yes,.no{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:24px}
+  .yes h3,.no h3{margin:0 0 12px;font-size:18px}
+  .yes li,.no li{margin:8px 0;color:var(--muted)}
+  .no{border-color:#f1d9d5;background:#fff8f7}
+  .faq details{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+               padding:16px 20px;margin-bottom:10px}
+  .faq summary{font-weight:700;cursor:pointer}
+  .faq p{color:var(--muted);margin:10px 0 0}
+  .cta{background:var(--ink);color:#fff;border-radius:26px;padding:38px;margin-top:64px}
+  .cta h2{color:#fff;margin:0 0 10px}
+  .cta p{color:#c8d6d0;margin:0 0 22px;max-width:560px}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;
+       font-weight:800;padding:15px 26px;border-radius:14px}
+  .btn:hover{background:#0b8a69}
+  .note{color:var(--muted);font-size:14px;margin-top:16px}
+  .samples{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+  .sample{aspect-ratio:9/16;border-radius:16px;background:linear-gradient(160deg,#0b1220,#1d3b34);
+          display:flex;align-items:flex-end;padding:14px;color:#dff5ec;font-size:13px;font-weight:700}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="eyebrow">Дизайн процессов · ролики для соцсетей</div>
+    <h1>Ролики из вашего текста —<br>за один день, без съёмки</h1>
+    <p class="lead">Вертикальные видео 9:16 с крупными буквами, подписями и озвучкой.
+       Вы присылаете тему и материалы — я собираю готовый MP4, который можно сразу выложить.</p>
+    <div class="badges">
+      <span class="badge">1080×1920, 30 кадров</span>
+      <span class="badge">Своя озвучка или без неё</span>
+      <span class="badge">Срок — 1 рабочий день</span>
+      <span class="badge">Смета до старта</span>
+    </div>
+  </header>
+
+  <h2>Сколько стоит</h2>
+  <p class="sub">Цена за готовый ролик, не за час работы. Правки — два круга включены.</p>
+  <div class="grid three">
+    <div class="card">
+      <h3>Один ролик</h3>
+      <div class="price">2 500 ₽</div>
+      <ul>
+        <li>до 45 секунд</li>
+        <li>подписи и акценты в кадре</li>
+        <li>озвучка по желанию</li>
+        <li>сдача за 1 день</li>
+      </ul>
+    </div>
+    <div class="card best">
+      <span class="tag">берут чаще</span>
+      <h3>Пакет из 5 роликов</h3>
+      <div class="price">11 000 ₽ <small>вместо 12 500</small></div>
+      <ul>
+        <li>единый стиль и ритм</li>
+        <li>разные темы из вашей рубрики</li>
+        <li>сдача по одному, в течение недели</li>
+        <li>тексты постов к каждому</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Подписка</h3>
+      <div class="price">18 000 ₽ <small>/мес</small></div>
+      <ul>
+        <li>8 роликов в месяц</li>
+        <li>график публикаций</li>
+        <li>стиль под ваш бренд</li>
+        <li>приоритет в очереди</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Как это выглядит</h2>
+  <p class="sub">Тёмный фон, крупная типографика, движение, подписи снизу — стиль, который узнают в ленте.</p>
+  <div class="samples">
+    <div class="sample">АГЕНТ<br>ВМЕСТО ВАС</div>
+    <div class="sample">КОНТЕНТ<br>НА АВТОПИЛОТЕ</div>
+    <div class="sample">ТРИ<br>ПРОВЕРКИ</div>
+    <div class="sample">ЧТО<br>ПРОДАЁТ</div>
+  </div>
+  <p class="note">Готовые примеры пришлю в чат — здесь только набросок стиля.</p>
+
+  <h2>Как мы работаем</h2>
+  <ol class="steps">
+    <li><b>01 · Бриф</b>Вы отвечаете на 7 вопросов: тема, для кого, что должен сделать зритель, тон, материалы, дедлайн.</li>
+    <li><b>02 · Смета</b>Я присылаю план: сцены, длительность, будет ли озвучка, цена и срок. Вы говорите «да» — только тогда начинаю.</li>
+    <li><b>03 · Сборка</b>Собираю ролик: кадры, текст, движение, звук. Черновик присылаю через день.</li>
+    <li><b>04 · Правки</b>Два круга включены: текст, темп, цвета. Готовый файл — без вотермарки.</li>
+  </ol>
+
+  <h2>Что входит и чего не ждать</h2>
+  <div class="split">
+    <div class="yes">
+      <h3>Входит</h3>
+      <ul>
+        <li>сценарий и раскадровка по вашей теме</li>
+        <li>графика, типографика, анимация</li>
+        <li>озвучка русским голосом (локально, без подписок)</li>
+        <li>подписи в кадре, музыкальная подложка</li>
+        <li>файл MP4 1080×1920 без вотермарки</li>
+        <li>права на использование в ваших соцсетях</li>
+      </ul>
+    </div>
+    <div class="no">
+      <h3>Не обещаю</h3>
+      <ul>
+        <li>просмотры, подписчиков и продажи</li>
+        <li>съёмку на камеру и монтаж ваших записей</li>
+        <li>актёрскую игру и постановочные сцены</li>
+        <li>чужие фото и видео без прав</li>
+        <li>чужие обещания в тексте — «гарантируем», «100 %»</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Частые вопросы</h2>
+  <div class="faq">
+    <details><summary>Мне нужно что-то записывать?</summary>
+      <p>Нет. Достаточно текста: что вы продаёте, кому и что должен понять зритель. Если хотите
+      свой голос — пришлите запись, вставлю её.</p></details>
+    <details><summary>Кто пишет сценарий?</summary>
+      <p>Я, по вашему брифу. Вы утверждаете текст до сборки — чтобы не переделывать готовое.</p></details>
+    <details><summary>Сколько правок можно вносить?</summary>
+      <p>Два круга входят в цену. Дальше — 500 ₽ за круг, если правки не связаны с моей ошибкой.</p></details>
+    <details><summary>Кому принадлежит ролик?</summary>
+      <p>Вам: можно публиковать, продвигать, ставить в рекламу. Я оставляю право показать
+      его в своём портфолио — если вы не против.</p></details>
+    <details><summary>А если тема сложная и ролик не выйдет?</summary>
+      <p>Если после первого черновика станет ясно, что тема не ложится в 45 секунд, я скажу
+      об этом и предложу разбить на два ролика. Оплата — за фактически сданное.</p></details>
+  </div>
+
+  <div class="cta">
+    <h2>Пришлите тему — соберу смету</h2>
+    <p>Напишите в Telegram одно предложение о том, что нужно рассказать. В ответ пришлю план
+       ролика, срок и цену. Без обязательств.</p>
+    <a class="btn" href="https://t.me/nadjat_29">Написать в Telegram</a>
+    <p class="note">Дальше — бриф на 7 вопросов и сборка.</p>
+  </div>
+</main>
+</body>
+</html>

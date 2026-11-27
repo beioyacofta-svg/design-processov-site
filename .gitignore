@@ -3,3 +3,4 @@
 # секреты сервисов
 leads-api/secrets/
 leads-api/.env
+.netlify/
