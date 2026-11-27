@@ -33,6 +33,20 @@
     .status-line small{display:block;margin-top:3px;font-weight:700;color:#4a6b5c}
     .status-line button{border:0;background:#193b34;color:#fff;border-radius:10px;padding:8px 11px;font-size:11px;font-weight:900;white-space:nowrap}
     body.locked .hero .primary{background:#e6ded0;color:#8b8172;box-shadow:none}
+    #onlineCard h2{font:600 21px/1.1 Georgia,serif;letter-spacing:-.04em;margin:0 0 8px}
+    .pub-link{margin:0 0 10px;padding:11px 12px;border-radius:12px;background:#fffefa;border:1px dashed #d9cfbd;word-break:break-all;font-size:12px;font-weight:800;color:#4a6b5c}
+    .pub-link code{font:inherit}
+    .pub-btns{display:flex;gap:8px;margin-bottom:8px}
+    .pub-btns button{flex:1}
+    .inbox-item{padding:13px 15px;border-bottom:1px solid var(--line)}
+    .inbox-item:last-child{border-bottom:0}
+    .inbox-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+    .inbox-head b{font-size:14px}
+    .inbox-head time{font-size:11px;font-weight:900;color:var(--sun)}
+    .inbox-item small{display:block;margin:2px 0 4px;color:var(--muted);font-size:12px}
+    .inbox-tel{display:inline-block;font-size:12px;font-weight:900;color:var(--moss);text-decoration:none;margin-bottom:8px}
+    .inbox-actions{display:flex;gap:8px}
+    .inbox-actions button{flex:1;min-height:38px;font-size:12px}
   </style>
   <style>.schedule{position:relative}.book{z-index:1}</style>
 </head>
@@ -61,7 +75,7 @@
         <p class="error" id="gateError"></p>
         <button class="primary wide" type="submit" id="gateSubmit">Начать бесплатно</button>
       </form>
-      <p class="fine">Продолжая, вы принимаете <a href="https://design-processov.ru/potok/offer/" target="_blank" rel="noopener">условия подписки</a> и <a href="https://design-processov.ru/privacy/" target="_blank" rel="noopener">политику данных</a>. Записи клиентов хранятся только в этом телефоне.</p>
+      <p class="fine">Продолжая, вы принимаете <a href="offer/" target="_blank" rel="noopener">условия подписки</a> и <a href="https://design-processov.ru/privacy/" target="_blank" rel="noopener">политику данных</a>. Записи клиентов хранятся только в этом телефоне.</p>
     </div>
   </div>
 
@@ -69,11 +83,12 @@
     <header class="top"><div class="brand"><i class="drop"></i>поток</div><div id="todayChip" class="date-chip"></div></header>
     <div id="planBar" class="plan-bar" hidden></div>
     <main>
-      <section class="page active" id="todayPage"><div class="intro"><div class="eyebrow" id="helloLabel"></div><h1>День в твоём<br>ритме.</h1><p>Добавляй клиентов, отмечай визиты и не теряй удобный момент для повторной записи.</p></div><section class="card income-glance" id="incomeGlance"></section><section class="card hero section"><h2>Начни с первой записи</h2><p>Всё пока чисто. Добавь клиента и удобное время — расписание появится здесь.</p><button class="primary" data-new-booking>+ Новая запись</button></section><section class="section"><div class="section-head"><h2>Сегодня</h2><button class="link" data-tab="schedulePage">Расписание →</button></div><div class="card" id="todayVisits"></div></section><section class="section"><div class="section-head"><h2>Кому пора вернуться</h2><button class="link" data-tab="clientsPage">Клиенты →</button></div><div class="card" id="dueClients"></div></section></section>
+      <section class="page active" id="todayPage"><div class="intro"><div class="eyebrow" id="helloLabel"></div><h1>День в твоём<br>ритме.</h1><p>Добавляй клиентов, отмечай визиты и не теряй удобный момент для повторной записи.</p></div><section class="section" id="inboxSection" hidden><div class="section-head"><h2>Заявки с сайта</h2><span class="eyebrow">подтверди или отклони</span></div><div class="card" id="inboxList"></div></section><section class="card income-glance" id="incomeGlance"></section><section class="card hero section"><h2>Начни с первой записи</h2><p>Всё пока чисто. Добавь клиента и удобное время — расписание появится здесь.</p><button class="primary" data-new-booking>+ Новая запись</button></section><section class="section"><div class="section-head"><h2>Сегодня</h2><button class="link" data-tab="schedulePage">Расписание →</button></div><div class="card" id="todayVisits"></div></section><section class="section"><div class="section-head"><h2>Кому пора вернуться</h2><button class="link" data-tab="clientsPage">Клиенты →</button></div><div class="card" id="dueClients"></div></section></section>
       <section class="page" id="schedulePage"><div class="intro"><div class="eyebrow">Рабочее расписание</div><h1>Свободное<br>время — видно.</h1></div><div class="date-row"><div class="date-switch"><button id="previousDay" aria-label="Предыдущий день">‹</button><strong id="scheduleDate"></strong><button id="followingDay" aria-label="Следующий день">›</button></div><input id="datePicker" type="date" aria-label="Выбрать дату"></div><section class="card schedule" id="scheduleGrid"></section></section>
       <section class="page" id="clientsPage"><div class="intro"><div class="eyebrow">Твоя база</div><h1>Клиенты</h1><p>Открой карточку — там вся история визитов и важные заметки о клиенте.</p></div><input id="clientSearch" class="search" type="search" placeholder="Найти клиента"><section class="card client-list" id="clientsList"></section></section>
       <section class="page" id="incomePage"><div class="intro"><div class="eyebrow">Деньги по записям</div><h1>Доход<br>под рукой.</h1><p>Смотри, что уже заработано и сколько ещё стоит в записи.</p></div><section class="card month-picker"><label for="incomeMonth">Период</label><input id="incomeMonth" type="month" aria-label="Выбрать месяц для подсчёта дохода"></section><section class="card finance-summary" id="incomeSummary"></section><section class="section"><div class="section-head"><h2>По дням</h2><span id="incomeDaysCount" class="eyebrow"></span></div><section class="card income-list" id="incomeDays"></section></section><p class="finance-note">«Получено» — визиты, отмеченные завершёнными. «В записи» — ожидаемая сумма по активным записям. Это рабочая сводка, а не бухгалтерский отчёт.</p></section>
-      <section class="page" id="settingsPage"><div class="intro"><div class="eyebrow">Настройки</div><h1>Услуги<br>и данные</h1></div><section class="card service-list" id="servicesList"></section><button class="secondary wide" style="margin-top:10px" id="openNewService">+ Добавить услугу</button><section class="card status-line section" id="planStatus"></section><button class="secondary wide" id="switchPhone" style="margin-top:10px">Войти по другому номеру</button><section class="card hint section"><h2>Данные и подписка</h2><p>Записи живут <b>только в этом браузере</b>. Перед очисткой телефона или сменой устройства скачай резервную копию. Не храните здесь медицинские данные клиентов.</p><div class="data-buttons"><button class="secondary" id="backup">Скачать копию</button><button class="danger" id="clearAll">Очистить всё</button></div></section></section>
+      <section class="page" id="settingsPage"><div class="intro"><div class="eyebrow">Настройки</div><h1>Услуги<br>и данные</h1></div><section class="card service-list" id="servicesList"></section><button class="secondary wide" style="margin-top:10px" id="openNewService">+ Добавить услугу</button><section class="card status-line section" id="planStatus"></section><button class="secondary wide" id="switchPhone" style="margin-top:10px">Войти по другому номеру</button>
+<section class="card section" id="onlineCard"><h2 style="margin:0 0 6px">Онлайн-запись для клиентов</h2><div id="onlineBody"></div></section><section class="card hint section"><h2>Данные и подписка</h2><p>Записи живут <b>только в этом браузере</b>. Перед очисткой телефона или сменой устройства скачай резервную копию. Не храните здесь медицинские данные клиентов.</p><div class="data-buttons"><button class="secondary" id="backup">Скачать копию</button><button class="danger" id="clearAll">Очистить всё</button></div></section></section>
     </main>
   </div>
   <nav class="nav" aria-label="Разделы"><button class="active" data-tab="todayPage"><span class="nav-icon">⌂</span>Сегодня</button><button data-tab="schedulePage"><span class="nav-icon">▦</span>Запись</button><button data-tab="clientsPage"><span class="nav-icon">♙</span>Клиенты</button><button data-tab="incomePage"><span class="nav-icon">₽</span>Доход</button><button data-tab="settingsPage"><span class="nav-icon">✦</span>Услуги</button></nav>
@@ -103,9 +118,9 @@
     const pretty=d=>new Intl.DateTimeFormat('ru-RU',{weekday:'short',day:'numeric',month:'long'}).format(new Date(`${d}T12:00:00`)); const money=n=>`${Number(n||0).toLocaleString('ru-RU')} ₽`; const escape=s=>String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c])); const initials=n=>n.trim().split(/\s+/).map(x=>x[0]||'').join('').slice(0,2).toUpperCase();
     let state; try{state=JSON.parse(localStorage.getItem(KEY))}catch{}; if(!state||!state.version)state={version:2,setup:false,master:'',services:[],clients:[],appointments:[],selectedDate:now()};
     if(state.version<2){(state.clients||[]).forEach(c=>{if(typeof c.notes!=='string')c.notes=''});(state.appointments||[]).forEach(a=>{if(typeof a.notes!=='string')a.notes=''});state.version=2;localStorage.setItem(KEY,JSON.stringify(state))}
-    let activeAction='',activeClient=''; const save=()=>localStorage.setItem(KEY,JSON.stringify(state)); const rule=x=>state.services.find(s=>s.id===x), person=x=>state.clients.find(c=>c.id===x); const visits=(date,all=false)=>state.appointments.filter(a=>a.date===date&&(all||a.status!=='cancelled')).sort((a,b)=>a.time.localeCompare(b.time));
+    let activeAction='',activeClient=''; const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));if(pub)schedulePublish();}; const rule=x=>state.services.find(s=>s.id===x), person=x=>state.clients.find(c=>c.id===x); const visits=(date,all=false)=>state.appointments.filter(a=>a.date===date&&(all||a.status!=='cancelled')).sort((a,b)=>a.time.localeCompare(b.time));
     /* ---------- доступ: 14 дней бесплатно, 490 ₽/мес ---------- */
-    const API='https://potok-api.netlify.app/api', AUTH_KEY='potok-auth', PLAN_KEY='potok-plan';
+    const BASE=location.pathname.startsWith('/potok')?'/potok':'', API=location.origin+BASE+'/api', AUTH_KEY='potok-auth', PLAN_KEY='potok-plan';
     const demoExpired=/(?:^|[?&])demo=expired(?:&|$)/.test(location.search);
     let plan=null; try{plan=JSON.parse(localStorage.getItem(PLAN_KEY))||null}catch{}
     const planPrice=()=>(plan&&plan.price)||490;
@@ -214,7 +229,94 @@
       try{ savePlan(await apiCall('/status',{token})) }
       catch(ex){ if(ex.status===401||ex.status===404){ localStorage.removeItem(AUTH_KEY); localStorage.removeItem(PLAN_KEY); plan=null; renderPlan(); openGate() } }
     }
-    document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible')refreshPlan() });
+    document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){refreshPlan();loadInbox();if(pub)publishOnline(true)} });
+
+    /* ---------- онлайн-запись для клиентов ---------- */
+    const WEB_BASE=location.origin+BASE, PUB_KEY='potok-pub';
+    let pub=null; try{pub=JSON.parse(localStorage.getItem(PUB_KEY))||null}catch{}
+    let inbox=[], pubTimer=null;
+    function freeSlots(){
+      const from=9*60,to=20*60,out=[];
+      for(let i=0;i<14;i++){
+        const d=plus(now(),i);
+        const busy=state.appointments.filter(a=>a.date===d&&a.status!=='cancelled').map(a=>[min(a.time),min(a.time)+Number(a.duration)]);
+        const free=[];
+        for(let t=from;t+30<=to;t+=30){ if(!busy.some(([s,e])=>t<e&&t+30>s)) free.push(time(t)) }
+        out.push({date:d,free});
+      }
+      return out.filter(d=>d.free.length);
+    }
+    function schedulePublish(){ clearTimeout(pubTimer); pubTimer=setTimeout(()=>publishOnline(true),1500) }
+    async function publishOnline(quiet){
+      const token=localStorage.getItem(AUTH_KEY); if(!token)return;
+      try{
+        const d=await apiCall('/booking/publish',{method:'POST',token,body:{
+          master:state.master||'Мастер', from:'09:00', to:'20:00',
+          services:state.services.map(s=>({id:s.id,name:s.name,duration:Number(s.duration),price:Number(s.price)})),
+          days:freeSlots()
+        }});
+        pub={slug:d.slug,url:WEB_BASE+'/z/?m='+d.slug,updatedAt:d.updatedAt};
+        localStorage.setItem(PUB_KEY,JSON.stringify(pub));
+        renderOnline();
+        if(!quiet)toast('Свободное время обновлено — ссылку можно отправлять клиентам.');
+      }catch(e){ if(!quiet)toast('Не получилось обновить свободное время. Проверьте интернет.') }
+    }
+    function renderOnline(){
+      const box=id('onlineBody'); if(!box)return;
+      const free=freeSlots(), count=free.reduce((n,d)=>n+d.free.length,0);
+      if(pub&&pub.url){
+        const when=pub.updatedAt?new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(pub.updatedAt)):'—';
+        box.innerHTML=`<div class="pub-link"><code>${escape(pub.url)}</code></div>
+          <div class="pub-btns"><button class="secondary" id="copyPub">Скопировать</button><button class="primary" id="pubOpen">Открыть</button></div>
+          <p class="notes-help">Обновлено ${when} · свободных окон: ${count} на 14 дней. Клиент выбирает услугу и время, а ты подтверждаешь заявку на главной.</p>
+          <button class="secondary wide" id="pubRefresh">Обновить свободное время</button>`;
+      }else{
+        box.innerHTML=`<p class="notes-help">Клиенты увидят твои услуги и свободные окна и оставят заявку. Ты подтвердишь её одним нажатием.</p>
+          <button class="primary wide" id="pubCreate">Создать ссылку для клиентов</button>`;
+      }
+      const cp=id('copyPub'); if(cp)cp.onclick=()=>{ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(pub.url).then(()=>toast('Ссылка скопирована.'),()=>toast('Скопируйте текст ссылки вручную.')); else toast('Скопируйте текст ссылки вручную.') };
+      const op=id('pubOpen'); if(op)op.onclick=()=>window.open(pub.url,'_blank');
+      const rf=id('pubRefresh'); if(rf)rf.onclick=()=>publishOnline(false);
+      const cr=id('pubCreate'); if(cr)cr.onclick=()=>publishOnline(false);
+    }
+    async function loadInbox(){
+      const token=localStorage.getItem(AUTH_KEY); if(!token)return;
+      try{ const d=await apiCall('/booking/inbox',{token}); inbox=d.items||[]; renderInbox() }catch{}
+    }
+    function renderInbox(){
+      const sec=id('inboxSection'), box=id('inboxList'); if(!sec||!box)return;
+      if(!inbox.length){ sec.hidden=true; box.innerHTML=''; return }
+      sec.hidden=false;
+      box.innerHTML=inbox.map(r=>`<article class="inbox-item">
+        <div class="inbox-head"><b>${escape(r.name)}</b><time>${escape(new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'}).format(new Date(r.date+'T12:00:00')))} · ${escape(r.time)}</time></div>
+        <small>${escape(r.serviceName)} · ${r.duration} мин. · ${money(r.price)}</small>
+        <a class="inbox-tel" href="tel:+${escape(r.phone)}">+${escape(r.phone)}</a>
+        <div class="inbox-actions"><button class="primary" data-accept="${r.id}">Принять</button><button class="secondary" data-reject="${r.id}">Отклонить</button></div>
+      </article>`).join('');
+      box.querySelectorAll('[data-accept]').forEach(b=>b.onclick=()=>acceptRequest(b.dataset.accept));
+      box.querySelectorAll('[data-reject]').forEach(b=>b.onclick=()=>rejectRequest(b.dataset.reject));
+    }
+    async function acceptRequest(id){
+      if(!allow())return;
+      const r=inbox.find(x=>x.id===id); if(!r)return;
+      const s=rule(r.serviceId);
+      if(!s){ toast('Услуги из заявки нет в списке — добавьте её и примите заявку снова.'); return }
+      let c=state.clients.find(x=>(x.phone&&x.phone===r.phone)||x.name.trim().toLowerCase()===String(r.name).trim().toLowerCase());
+      if(!c){ c={id:uid(),name:r.name,waitlist:false,phone:r.phone,notes:'Телефон: +'+r.phone}; state.clients.push(c) }
+      else { c.phone=c.phone||r.phone; if(!String(c.notes||'').includes(r.phone)) c.notes=(c.notes?c.notes+'; ':'')+'Телефон: +'+r.phone }
+      const a={id:uid(),clientId:c.id,serviceId:r.serviceId,date:r.date,time:r.time,duration:Number(r.duration)||Number(s.duration),price:Number(r.price)||Number(s.price),status:'planned'};
+      if(intersects(a)){ toast('Это время занято в расписании. Свяжитесь с клиентом и предложите другое.'); return }
+      state.appointments.push(a); save(); render();
+      apiCall('/booking/respond',{method:'POST',token:localStorage.getItem(AUTH_KEY),body:{id,action:'accept'}}).catch(()=>{});
+      inbox=inbox.filter(x=>x.id!==id); renderInbox(); publishOnline(true);
+      toast('Заявка принята — запись добавлена в расписание.');
+    }
+    async function rejectRequest(id){
+      inbox=inbox.filter(x=>x.id!==id); renderInbox();
+      apiCall('/booking/respond',{method:'POST',token:localStorage.getItem(AUTH_KEY),body:{id,action:'reject'}}).catch(()=>{});
+      publishOnline(true);
+      toast('Заявка отклонена. Окно снова свободно.');
+    }
 
     const toast=t=>{id('toast').textContent=t;id('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>id('toast').classList.remove('show'),2600)};
     function closeSetups(){id('setup').hidden=true;id('serviceSetup').hidden=true} function openSetup(){if(!state.setup){id('setup').hidden=false;id('serviceSetup').hidden=true;id('masterName').value=state.master||''}}
@@ -252,10 +354,10 @@
     id('backup').onclick=()=>{const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`potok-kopiya-${now()}.json`;a.click();URL.revokeObjectURL(u);toast('Копия данных скачана.');};id('clearAll').onclick=()=>{if(!confirm('Удалить все записи, услуги и клиентов из этого браузера?'))return;localStorage.removeItem(KEY);state={version:2,setup:false,master:'',services:[],clients:[],appointments:[],selectedDate:now()};openSetup();render();};
     async function boot(){
       if(!state.setup)openSetup();else closeSetups();
-      renderPlan();render();
+      renderPlan();render();renderOnline();
       if(demoExpired){closeSetups();showPaywall();return}
       if(!localStorage.getItem(AUTH_KEY)){openGate();return}
-      await refreshPlan();render();
+      await refreshPlan();render();renderOnline();loadInbox();if(pub)publishOnline(true);
     }
     boot();
   })();

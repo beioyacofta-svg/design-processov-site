@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#193b34">
+<title>Запись онлайн — Поток</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{--ink:#20302b;--pine:#193b34;--moss:#39715e;--paper:#fbf8f1;--card:#fffdfa;--line:#e5ddd0;
+        --muted:#78827c;--mint:#dcece1;--sun:#d99142;--red:#a84742;--radius:22px}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(circle at 8% -4%,#f7deb7 0,transparent 25rem),
+       radial-gradient(circle at 100% 0,#d7eadc 0,transparent 24rem),var(--paper);color:var(--ink);
+       font:500 15px/1.45 ui-rounded,"Avenir Next",system-ui,sans-serif;min-height:100vh}
+  button,input{font:inherit}
+  button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .app{width:min(100%,540px);margin:0 auto;padding:18px 15px calc(28px + env(safe-area-inset-bottom))}
+  .brand{display:flex;align-items:center;gap:9px;font:600 26px/1 Georgia,serif;letter-spacing:-.07em}
+  .drop{width:26px;height:26px;border-radius:54% 46% 54% 46%;background:var(--pine);position:relative;transform:rotate(-27deg)}
+  .drop:after{content:"";position:absolute;width:7px;height:7px;right:4px;top:4px;border-radius:50%;background:#f3b459}
+  .eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--moss);font-weight:900}
+  h1{font:600 32px/1 Georgia,serif;letter-spacing:-.055em;margin:8px 0 6px}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+  .card{background:#fffdfad9;border:1px solid #fff;border-radius:var(--radius);box-shadow:0 13px 35px rgba(35,47,40,.10);padding:16px}
+  .section{margin-top:14px}
+  .section > .eyebrow{margin-bottom:7px;display:block}
+  .service{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;
+           border:1px solid var(--line);background:#fffefa;border-radius:14px;padding:12px 14px;margin-bottom:8px}
+  .service[aria-pressed="true"]{border-color:var(--pine);background:var(--mint);box-shadow:inset 0 0 0 1px var(--pine)}
+  .service b{display:block;font-size:14px}
+  .service small{color:var(--muted);font-size:11px;font-weight:800}
+  .service span{font-weight:900;font-size:13px;white-space:nowrap}
+  .dates{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+  .dates::-webkit-scrollbar{display:none}
+  .day{flex:0 0 auto;border:1px solid var(--line);background:#fffefa;border-radius:14px;padding:9px 13px;
+       font-size:12px;font-weight:900;color:var(--ink);min-width:74px;text-align:center}
+  .day[aria-pressed="true"]{background:var(--pine);color:#fff;border-color:var(--pine)}
+  .day small{display:block;font-size:10px;font-weight:800;opacity:.75;margin-top:2px}
+  .times{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+  .slot{border:1px solid var(--line);background:#fffefa;border-radius:11px;padding:10px 0;font-size:13px;font-weight:900;color:var(--ink)}
+  .slot[aria-pressed="true"]{background:var(--pine);color:#fff;border-color:var(--pine)}
+  .field{margin-top:10px}
+  label{display:block;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  input{width:100%;min-height:46px;border:1px solid var(--line);border-radius:13px;padding:10px 13px;background:#fffefa;color:inherit}
+  .primary{width:100%;min-height:50px;border:0;border-radius:15px;background:var(--pine);color:#fff;font-weight:900;font-size:15px;margin-top:14px}
+  .primary[disabled]{background:#b9c4bd}
+  .note{font-size:11px;color:var(--muted);margin:10px 0 0;line-height:1.5}
+  .error{color:var(--red);font-size:12px;font-weight:900;margin:8px 0 0;display:none}
+  .error.show{display:block}
+  .empty{color:var(--muted);font-size:13px;margin:6px 0}
+  .done{text-align:center;padding:26px 18px}
+  .done i{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:var(--mint);color:var(--pine);font-size:26px;margin:0 auto 12px;font-style:normal}
+  .done b{display:block;font:600 24px/1.1 Georgia,serif;letter-spacing:-.04em;margin-bottom:8px}
+  .done p{color:var(--muted);font-size:13px;margin:0}
+  .loading{color:var(--muted);font-size:13px;padding:20px 4px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brand"><i class="drop"></i>поток</div>
+  <div class="eyebrow" style="margin-top:14px">Запись онлайн</div>
+  <h1 id="masterName">Запись</h1>
+  <p class="sub" id="masterSub">Выберите услугу и удобное время — мастер подтвердит запись.</p>
+
+  <div id="form">
+    <div class="loading" id="loading">Открываю свободное время…</div>
+
+    <div class="section" id="serviceSection" hidden>
+      <span class="eyebrow">Услуга</span>
+      <div id="services"></div>
+    </div>
+
+    <div class="section" id="dateSection" hidden>
+      <span class="eyebrow">День</span>
+      <div class="dates" id="dates"></div>
+    </div>
+
+    <div class="section" id="timeSection" hidden>
+      <span class="eyebrow">Время</span>
+      <div class="times" id="times"></div>
+      <p class="empty" id="noTimes" hidden>На этот день свободного времени нет — выберите другой.</p>
+    </div>
+
+    <div class="section card" id="contactSection" hidden>
+      <span class="eyebrow">Как вас записать</span>
+      <div class="field"><label for="clientName">Имя</label><input id="clientName" autocomplete="name" placeholder="Имя" maxlength="60"></div>
+      <div class="field"><label for="clientPhone">Телефон</label><input id="clientPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 000-00-00"></div>
+      <p class="error" id="formError"></p>
+      <button class="primary" id="sendBtn">Записаться</button>
+      <p class="note">Мастер увидит заявку и подтвердит её. Это не платёж — оплата услуги на месте.</p>
+    </div>
+  </div>
+
+  <div class="card done" id="done" hidden>
+    <i>✓</i>
+    <b>Заявка отправлена</b>
+    <p id="doneText"></p>
+  </div>
+
+  <div class="card" id="fail" hidden>
+    <b style="display:block;font:600 22px/1.15 Georgia,serif;margin-bottom:6px">Ссылка не работает</b>
+    <p class="note" style="margin:0">Похоже, мастер ещё не включил онлайн-запись или ссылка устарела. Напишите мастеру напрямую.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const PREFIX = location.pathname.includes('/potok/') ? '/potok' : '';
+  const API = location.origin + PREFIX + '/api';
+  const slug = new URLSearchParams(location.search).get('m') || '';
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const money = (n) => `${Number(n || 0).toLocaleString('ru-RU')} ₽`;
+  const toMin = (t) => { const [a, b] = String(t).split(':').map(Number); return a * 60 + b; };
+  const toTime = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  const dayLabel = (iso) => new Intl.DateTimeFormat('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(iso + 'T12:00:00'));
+
+  let card = null, service = null, date = null, time = null;
+
+  function fits(day, svc) {
+    const free = new Set(day.free || []);
+    const end = toMin(card.to || '20:00');
+    return (day.free || []).filter((t) => {
+      const start = toMin(t);
+      if (start + Number(svc.duration) > end) return false;
+      for (let m = start; m < start + Number(svc.duration); m += 30) if (!free.has(toTime(m))) return false;
+      return true;
+    });
+  }
+
+  function daysForService(svc) {
+    return (card.days || []).map((d) => ({ date: d.date, times: fits(d, svc) })).filter((d) => d.times.length);
+  }
+
+  function renderServices() {
+    $('#services').innerHTML = card.services.map((s) => `
+      <button class="service" data-service="${esc(s.id)}" aria-pressed="${service && service.id === s.id}">
+        <span><b>${esc(s.name)}</b><small>${s.duration} мин.</small></span>
+        <span>${money(s.price)}</span>
+      </button>`).join('');
+    document.querySelectorAll('[data-service]').forEach((b) => {
+      b.onclick = () => {
+        service = card.services.find((s) => s.id === b.dataset.service) || null;
+        time = null;
+        const days = daysForService(service);
+        date = days.length ? days[0].date : null;
+        renderAll();
+      };
+    });
+  }
+
+  function renderDates() {
+    const days = daysForService(service);
+    $('#dates').innerHTML = days.map((d) => `
+      <button class="day" data-date="${d.date}" aria-pressed="${date === d.date}">${esc(dayLabel(d.date))}<small>${d.times.length} окон</small></button>`).join('');
+    document.querySelectorAll('[data-date]').forEach((b) => {
+      b.onclick = () => { date = b.dataset.date; time = null; renderAll(); b.scrollIntoView({ inline: 'center', block: 'nearest' }); };
+    });
+    $('#noTimes').hidden = !!days.length;
+  }
+
+  function renderTimes() {
+    const day = (card.days || []).find((d) => d.date === date);
+    const times = day && service ? fits(day, service) : [];
+    $('#times').innerHTML = times.map((t) => `<button class="slot" data-time="${t}" aria-pressed="${time === t}">${t}</button>`).join('');
+    document.querySelectorAll('[data-time]').forEach((b) => {
+      b.onclick = () => {
+        time = b.dataset.time;
+        renderTimes();
+        $('#sendBtn').disabled = false;
+        $('#contactSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+    });
+  }
+
+  function renderAll() {
+    const days = daysForService(service || {});
+    if (!days.length) {
+      $('#dateSection').hidden = true; $('#timeSection').hidden = true; $('#contactSection').hidden = true;
+      $('#noTimes').hidden = false;
+      $('#noTimes').textContent = 'Свободного времени пока нет. Напишите мастеру — подберём время вместе.';
+      return;
+    }
+    if (!date || !days.some((d) => d.date === date)) date = days[0].date;
+    $('#dateSection').hidden = false;
+    $('#timeSection').hidden = false;
+    $('#contactSection').hidden = false;
+    renderDates(); renderTimes();
+    $('#sendBtn').disabled = !time;
+  }
+
+  async function load() {
+    if (!slug) { fail(); return; }
+    try {
+      const r = await fetch(`${API}/booking/card?m=${encodeURIComponent(slug)}`);
+      if (!r.ok) throw new Error('bad');
+      card = await r.json();
+      if (!card.services || !card.services.length) { fail(); return; }
+      $('#masterName').textContent = card.master || 'Запись онлайн';
+      $('#loading').hidden = true;
+      $('#serviceSection').hidden = false;
+      service = card.services[0];
+      renderServices();
+      renderAll();
+    } catch (e) { fail(); }
+  }
+
+  function fail() {
+    $('#loading').hidden = true;
+    $('#form').hidden = true;
+    $('#fail').hidden = false;
+  }
+
+  $('#clientPhone').addEventListener('input', (e) => {
+    let d = String(e.target.value || '').replace(/\D/g, '');
+    if (d.startsWith('8')) d = '7' + d.slice(1);
+    if (!d.startsWith('7') && d.length) d = '7' + d;
+    d = d.slice(0, 11);
+    if (!d) { e.target.value = ''; return; }
+    const r = d.slice(1);
+    let out = '+7';
+    if (r.length) out += ' ' + r.slice(0, 3);
+    if (r.length > 3) out += ' ' + r.slice(3, 6);
+    if (r.length > 6) out += '-' + r.slice(6, 8);
+    if (r.length > 8) out += '-' + r.slice(8, 10);
+    e.target.value = out;
+  });
+
+  $('#sendBtn').onclick = async () => {
+    const name = $('#clientName').value.trim();
+    const phone = $('#clientPhone').value.trim();
+    const err = $('#formError');
+    err.classList.remove('show');
+    if (name.length < 2) { err.textContent = 'Напишите имя'; err.classList.add('show'); return; }
+    if (!phone) { err.textContent = 'Напишите телефон — мастер позвонит'; err.classList.add('show'); return; }
+    if (!time) { err.textContent = 'Выберите время'; err.classList.add('show'); return; }
+
+    const btn = $('#sendBtn');
+    btn.disabled = true; btn.textContent = 'Отправляю…';
+    try {
+      const r = await fetch(`${API}/booking/request`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug, name, phone, serviceId: service.id, date, time })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw Object.assign(new Error(d.message || 'fail'), { code: d.error });
+      $('#form').hidden = true;
+      $('#done').hidden = false;
+      $('#doneText').textContent = `${dayLabel(date)} в ${time} · ${service.name}. Мастер подтвердит запись и свяжется с вами по телефону.`;
+      $('#masterSub').hidden = true;
+    } catch (e) {
+      btn.disabled = false; btn.textContent = 'Записаться';
+      if (e.code === 'slot_taken') {
+        err.textContent = 'Это время только что заняли. Выберите другое.';
+        err.classList.add('show');
+        time = null; await refresh();
+      } else {
+        err.textContent = e.message && e.message !== 'fail' ? e.message : 'Не получилось отправить. Проверьте интернет.';
+        err.classList.add('show');
+      }
+    }
+  };
+
+  async function refresh() {
+    try {
+      const r = await fetch(`${API}/booking/card?m=${encodeURIComponent(slug)}`);
+      if (!r.ok) return;
+      const fresh = await r.json();
+      card.days = fresh.days;
+      service = (fresh.services || []).find((s) => s.id === (service && service.id)) || service;
+      renderAll();
+    } catch {}
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
